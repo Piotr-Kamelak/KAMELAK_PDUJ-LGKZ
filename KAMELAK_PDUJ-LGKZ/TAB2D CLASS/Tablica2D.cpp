@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cstdlib>
+#include <iomanip>
+#include <string>
 #include "Tablica2D.h"
 using namespace std;
 
@@ -19,7 +21,7 @@ Tab2D::Tab2D(int mm, int nn)
 
 void Tab2D::generate(int z)
 {
-	
+	z=zz;
 	int j = 0;
 	while (j < m)
 	{
@@ -51,83 +53,95 @@ void Tab2D::simplePrint()
 }
 
 void Tab2D::indexedPrint()
-{	    //tabelka
+{
+	int maxLength = (tab[0][0] == 1 || tab[m - 1][n - 1] == 1)
+		? to_string(m * n).length() 
+		: to_string(z).length() + 1; 
 
-	cout << "    ";
-	for (int z = 0; z < n; z++)
-	{
-		if (z <= 9)
-		{
-			cout << " ";
-		}
-		if (z <= 99)
-		{
-			cout << " ";
-		}
+	int firstLengthN = 0;
 
-		cout << z << "  ";
+	for (int j = 0; j < m; j++) {
+		if (to_string(tab[j][0]).length() > firstLengthN)
+			firstLengthN = to_string(tab[j][0]).length();
 	}
 
-	cout << endl;
-
-	cout << "  ";
-	for (int i = 0; i < n * 5; i++)
+	for (int j = -2; j < m; j++) 
 	{
-		cout << "-";
-
-	}
-	cout << endl;
-
-
-	for (int x = 0; x < m; x++)
-	{
-		if (x > 9)
+		for (int i = -2; i < n; i++)
 		{
-			cout << x << "|";
+			switch (j)
+			{
+			case -2:
+				switch (i)
+				{
+				case -2:
+					cout << setw(to_string(m - 1).length()) << ' ';
+					break;
+
+				case -1:
+					cout << setw(1) << ' ';
+					break;
+
+				case 0:
+					cout << setw(firstLengthN) << i;
+					break;
+
+				default:
+					cout << setw(maxLength + 1) << i; 
+					break;
+				}
+				break;
+
+			case -1:
+				switch (i)
+				{
+				case -2:
+					cout << setw(to_string(m - 1).length()) << ' ';
+					break;
+
+				case -1:
+					cout << std::setw(1) << '+';
+					break;
+
+				case 0:
+					cout << setfill('-'); 
+					cout << setw(firstLengthN) << '-';
+					break;
+
+				default:
+					cout << setw(maxLength + 1) << '-';
+					break;
+				}
+				break;
+
+			default:
+				cout<< setfill(' '); 
+				switch (i)
+				{
+				case -2:
+					cout << setw(to_string(m - 1).length()) << j;
+					break;
+
+				case -1:
+					cout << setw(1) << '|';
+					break;
+
+				case 0:
+					cout << setw(firstLengthN) << tab[j][i];
+					break;
+
+				default:
+					cout << setw(maxLength + 1) << tab[j][i];
+					break;
+				}
+				break;
+			}
+
 		}
-		else
-			cout << x << " |";
-
-
-		int  y = 0;
-		while (y != n)
-		{
-			cout << " ";
-			if (tab[x][y] <= 9)
-			{
-				cout << " ";
-			}
-
-			if (tab[x][y] <= 99)
-			{
-				cout << " ";
-			}
-
-
-			if (tab[x][y] <= -1)
-			{
-				cout << "\b";
-			}
-
-
-			if (tab[x][y] < -9)
-			{
-				cout << "\b";
-			}
-
-			if (tab[x][y] < -99)
-			{
-				cout << "\b";
-			}
-
-			cout << tab[x][y] << " ";
-
-			y++;
-
-		}
-		cout << endl;
+		cout << std::endl;
 	}
 
+	cout << std::endl;
 }
 
 void Tab2D::scanPDUJ()
